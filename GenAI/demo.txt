@@ -1,0 +1,7 @@
+2. request : Can you add 2 + 3
+1. json format,
+{"requested_operation": "add", "answer": "5"}
+what is the 2 numbers?
+
+
+{"requested_operation": "add", "first_number": "2", "second_number": "3"}

@@ -1,0 +1,8 @@
+1. pip install youtube-transcript-api faiss-cpu tiktoken python-dotenv 
+
+whole package
+2. pip install youtube-transcript-api
+pip install langchain-core langchain-openai langchain-community langchain-text-splitters
+pip install faiss-cpu openai
+
+3. 

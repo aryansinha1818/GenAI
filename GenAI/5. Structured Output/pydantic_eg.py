@@ -6,7 +6,7 @@ class Id(BaseModel):
 
 # dict form
 emp1 = Id(id= 1, name='Aryan')
-emp2 = Id(id=2, name="Sinha")
+emp2 = Id(id="2", name="Sinha")
 
 print(emp1)
 print(emp2)

@@ -2,6 +2,9 @@ from langchain_openai import ChatOpenAI
 from langchain_core.tools import tool
 from langchain_core.messages import HumanMessage
 import requests
+import dotenv
+
+dotenv.load_dotenv()
 
 # ✅ Tool creation
 @tool

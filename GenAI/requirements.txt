@@ -9,7 +9,9 @@ openai
 # tools
 langchain-community
 ddgs
-angchain_experimental      
+langchain_experimental      
+
+scikit-learn
 
 # Anthropic Integration
 # langchain-anthropic
@@ -28,4 +30,3 @@ python-dotenv
 
 # Machine Learning Utilities
 # numpy
-# scikit-learn

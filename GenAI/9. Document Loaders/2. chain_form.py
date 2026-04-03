@@ -7,7 +7,7 @@ from langchain_core.runnables import RunnablePassthrough
 
 load_dotenv()
 
-model = ChatOpenAI(model="gpt-3.5-turbo")
+model = ChatOpenAI()
 
 file_path = r"D:\SDE\LangChain\GenAI\9. Document Loaders\doc.txt"
 

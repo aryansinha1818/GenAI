@@ -8,13 +8,15 @@ chat_template = ChatPromptTemplate.from_messages([
 
 chat_history = []
 #load chat_history
-with open('chat_history.txt') as f:
+with open('11.chat_history.txt') as f:
     chat_history.extend(f.readlines())
 
 print(chat_history)
 
-chat_template.invoke({
+prompt = chat_template.invoke({
     'chat_history' : chat_history, 
     'query' : 'Where is my refund?'
 })
+
+print(prompt)
 

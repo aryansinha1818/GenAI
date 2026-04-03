@@ -2,46 +2,61 @@ from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv
 from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
-# a type of runnable multiple chains in parallel could be run
-from langchain.schema.runnable import RunnableParallel
+from langchain_core.runnables import RunnableParallel
 
 load_dotenv()
 
-model1 = ChatOpenAI(model = "gpt-4o", temperature = 0.7)
+# Models
+model1 = ChatOpenAI(model="gpt-4o-mini", temperature=0.7)
+model2 = ChatOpenAI(model="gpt-4o-mini", temperature=0.7)
 
-model2 = ChatOpenAI(model = "gpt-3.5-turbo", temperature = 0.7)
-
+# Prompts
 prompt1 = PromptTemplate(
-    template = 'Generate short and the simple notes from the following text \n {text}',
-    input_variables=['text']
+    template="Generate short and simple notes from the following text:\n{text}",
+    input_variables=["text"]
 )
+
 prompt2 = PromptTemplate(
-    template = 'Generate 5 short question from the following text \n  {text}',
-    input_variables=['text']
+    template="Generate 5 short questions from the following text:\n{text}",
+    input_variables=["text"]
 )
 
 prompt3 = PromptTemplate(
-    template = 'Merge the provided notes and quiz into a single document  \n notes -> {notes} and quiz',
-    input_variables=['notes', 'quiz']
+    template="Merge the provided notes and quiz into a single document:\n\nNotes:\n{notes}\n\nQuiz:\n{quiz}",
+    input_variables=["notes", "quiz"]
 )
 
+# Parser
 parser = StrOutputParser()
 
-# parallel chain
-paralle_chain = RunnableParallel({
-    # dictinary
-    'notes': prompt1  | model1 | parser,
-    'quiz': prompt2 | model2 | parser 
+# Parallel chain
+parallel_chain = RunnableParallel({
+    "notes": prompt1 | model1 | parser,
+    "quiz": prompt2 | model2 | parser
 })
 
+# Final chain
 final_chain = prompt3 | model1 | parser
 
-chain = paralle_chain | final_chain
+# Full pipeline
+chain = parallel_chain | final_chain
 
+# Input
 text = """
-The Solar System consists of the Sun and eight planets: Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, and Neptune. Earth is the only known planet to support life due to its ideal distance from the Sun and presence of water. Jupiter, the largest planet, has a strong magnetic field and dozens of moons. The asteroid belt lies between Mars and Jupiter, containing rocky remnants from the Solar System’s formation. Saturn is famous for its stunning ring system made of ice and dust. Pluto, once considered the ninth planet, was reclassified as a dwarf planet in 2006. The Sun, a yellow dwarf star, makes up 99.8% of the Solar System’s mass. Space exploration has revealed key details about planetary atmospheres and potential for extraterrestrial life.
+The Solar System is the gravitationally bound system of the Sun and the masses that orbit it, most prominently its eight planets, of which Earth is one. The system formed about 4.6 billion years ago when a dense region of a molecular cloud collapsed, creating the Sun and a protoplanetary disc from which the orbiting bodies assembled.
+
+The Sun accounts for 99.86% of the Solar System's total mass. Inside the Sun's core, hydrogen is fused into helium, releasing energy that is emitted through the Sun's photosphere. This creates the heliosphere and a decreasing temperature gradient across the Solar System.
+
+The next most massive objects of the system are the eight planets, which by definition dominate the orbits they occupy. Closest to the Sun in order of increasing distance are the terrestrial planets – Mercury, Venus, Earth and Mars. These are the planets of the inner Solar System. Earth and Mars are the only planets that orbit within the Sun's habitable zone, in which sunlight can keep surface water liquid under atmospheric pressure. Beyond the frost line at about five astronomical units (AU),[d] are the planets of the outer Solar System: two gas giants – Jupiter and Saturn – and two ice giants – Uranus and Neptune. Jupiter and Saturn possess nearly 90% of the non-stellar mass of the Solar System.
+
+Objects of planetary mass that do not dominate their orbit but orbit the Sun directly are called dwarf planets. The International Astronomical Union's Minor Planet Center lists Ceres, Pluto, Eris, Makemake, and Haumea as dwarf planets.[12] Four other Solar System objects are generally identified as such: Orcus, Quaoar, Gonggong, and Sedna.[13] Less massive than the dwarf planets are the vast number of small Solar System bodies, such as asteroids, comets, centaurs, meteoroids, and interplanetary dust clouds.[e] The dwarf planet Ceres and many of these smaller bodies are located in the asteroid belt (between Mars's and Jupiter's orbit), while all other dwarf planets are members of populations of trans-Neptunian objects, which may be found in the Kuiper belt just outside Neptune or in the further scattered disc.
+
+Many objects in the solar system do not orbit the Sun directly and are instead natural satellites, commonly called 'moons', of larger bodies. These can be found throughout the Solar System in sizes from planetary-mass moons at their largest to much less massive moonlets at their smallest. The largest two moons (Ganymede of Jupiter and Titan of Saturn) are larger (though less massive) than the smallest planet (Mercury), while the seven most massive, which includes Earth's Moon, are more massive and larger than any of the dwarf planets.
+
+Within the heliosphere, the Solar System is constantly flooded by the charged plasma particles of the solar wind, which, along with interplanetary dust, gas and cosmic rays, form an interplanetary medium between the bodies of the Solar System. At around 70–90 AU from the Sun, the solar wind is halted by the interstellar medium, resulting in the heliopause and the border of the interplanetary medium to interstellar space. Further out somewhere beyond 2,000 AU from the Sun extends the outermost region of the Solar System, the theorized Oort cloud, the source for long-period comets, stretching to the edge of the Solar System, the edge of its Hill sphere, at 178,000–227,000 AU (2.81–3.59 ly), where its gravitational potential becomes equal to the galactic potential.[14] The Solar System currently moves through a cloud of interstellar medium called the Local Cloud. The closest star to the Solar System, Proxima Centauri, is 269,000 AU (4.25 ly) away. Both are within the Local Bubble, a relatively small 1,000 light-years (ly) wide region of the Milky Way.
 """
 
-result = chain.invoke({'text':text})
+# Run
+result = chain.invoke({"text": text})
 
 print(result)
